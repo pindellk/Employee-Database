@@ -92,48 +92,68 @@ function start() {
                     mngrEmployees();
                     break;
 
-                case "Add Employee":
-                    addEmployee();
-                    break;
+                // case "Add Employee":
+                //     addEmployee();
+                //     break;
 
-                case "Remove Employee":
-                    removeEmployees();
-                    break;
+                // case "Remove Employee":
+                //     removeEmployees();
+                //     break;
 
-                case "Update Employee Role":
-                    updateRole();
-                    break;
+                // case "Update Employee Role":
+                //     updateRole();
+                //     break;
 
-                case "Update Employee Manager":
-                    updateManager();
-                    break;
+                // case "Update Employee Manager":
+                //     updateManager();
+                //     break;
 
-                case "View ALL Employees":
-                    viewRoles();
-                    break;
+                // case "View ALL Employees":
+                //     viewRoles();
+                //     break;
             }
         });
 }
 
 // Function to view all employees
 function viewEmployees() {
-    connection.query("SELECT * FROM _______", function (err, res) {  // add joined table
+    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary ";
+    query += "FROM employee INNER JOIN role ";
+    query += "ON employee.role_id = role.id ";
+    query += "INNER JOIN department ";
+    query += "ON role.department_id = department.id";
+
+    connection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
     });
 }
 
 // Function to view all employees by department
-// function deptEmployees() {
-//     connection.query("SELECT * FROM _______", function (err, res) {  // add joined table
-//         if (err) throw err;
-//         console.table(res);
-//     });
-// }
+function deptEmployees() {
+    var query = "SELECT employee.id, employee.first_name, employee.last_name, department.name ";
+    query += "FROM employee INNER JOIN role ";
+    query += "ON employee.role_id = role.id ";
+    query += "INNER JOIN department ";
+    query += "ON role.department_id = department.id";
 
-// Function to view all employees by manager - similar to above
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+    });
+}
+
+// Function to view all employees by manager
 function mngrEmployees() {
+    var query = "employee.id, employee.first_name, employee.last_name, employee.manager_id ";
+    query += "FROM employee INNER JOIN role ";
+    query += "ON employee.role_id = role.id ";
+    query += "WHERE role.title = "manager" ";
 
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+    });
 }
 
 // Function to add employee
