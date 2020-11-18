@@ -2,7 +2,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
-const query = connection.query();
 
 // Create connection info for sql database
 const connection = mysql.createConnection({
@@ -21,105 +20,164 @@ connection.connect(function (err) {
     start();
 });
 
+// Object for main action menu
 const actionMenu = {
     name: "action",
-    type: "list",
+    type: "rawlist",
     message: "What would you like to do?",
-    choices: ["View All Employees", "View All Employees by Department", "View All Employees by Manager", "Add Employee ", "Remove Employee", "Update Employee Role", "Update Employee Manager", "View ALL Roles"]
+    choices: [
+        "View All Employees",
+        "View All Employees by Department",
+        "View All Employees by Manager",
+        "Add Employee",
+        "Remove Employee",
+        "Update Employee Role",
+        "Update Employee Manager",
+        "View ALL Roles"
+    ]
 };
 
 const newEmployee = [
     {
         type: "input",
-        name: "name",
-        message: "What is your name?",
-    },
-    {
-        type: "number",
-        name: "id",
-        message: "What is your ID?",
-        validate: val => /[1-9]/gi.test(val),
+        name: "firstName",
+        message: "What is the employee's first name?"
     },
     {
         type: "input",
-        name: "email",
-        message: "What is your email?",
+        name: "lastName",
+        message: "What is the employee's last name?"
     },
     {
         type: "list",
         name: "role",
-        message: "What is your role?",
-        choices: ["Manager", new inquirer.Separator(), "Engineer", new inquirer.Separator(), "Intern"]
+        message: "What is the employee's role?",
+        choices: ["Sales Lead", new inquirer.Separator(), "Salesperson", new inquirer.Separator(), "Lead Engineer", new inquirer.Separator(), "Software Engineer", new inquirer.Separator(), "Account Manager", new inquirer.Separator(), "Accountant", new inquirer.Separator(), "Legal Team Lead", new inquirer.Separator(), "Lawyer"]
+    },
+    // {
+    //     type: "list",
+    //     name: "manager",
+    //     message: "Who is the employee's manager?",
+    //     choices: ["None", new inquirer.Separator(), employees.manager] // grab managers from DB
+    // },
+    {
+        type: "list",
+        name: "department",
+        message: "What department is the employee in?",
+        choices: ["Sales", new inquirer.Separator(), "Engineering", new inquirer.Separator(), "Finance", new inquirer.Separator(), "Legal"]
+    },
+    {
+        type: "number",
+        name: "salary",
+        message: "What is the employee's salary?",
+        validate: val => /[1-9]/gi.test(val),
     }
 ];
 
-// Function which prompts the user for what action they should take
+// Function that prompts the user to select an action
 function start() {
     inquirer
         .prompt(actionMenu)
         .then((answer) => {
-            let nextTask;
-            if (answer.action === actionMenu.choices[0]) {
-                viewEmployees();
-            }
-            if (answer.action === actionMenu.choices[1]) {
-                deptEmployees();
-            }
-            if (answer.action === actionMenu.choices[2]) {
-                mngEmployees();
-            }
-            if (answer.action === actionMenu.choices[3]) {
-                addEmployee();
-            }
-            if (answer.action === actionMenu.choices[4]) {
-                removeEmployee();
-            }
-            if (answer.action === actionMenu.choices[5]) {
-                updateRole();
-            }
-            if (answer.action === actionMenu.choices[6]) {
-                updateManager();
-            }
-            if (answer.action === actionMenu.choices[7]) {
-                viewRoles();
+            switch (answer.action) {
+                case "View All Employees":
+                    viewEmployees();
+                    break;
+
+                case "View All Employees by Department":
+                    deptEmployees();
+                    break;
+
+                case "View All Employees by Manager":
+                    mngrEmployees();
+                    break;
+
+                case "Add Employee":
+                    addEmployee();
+                    break;
+
+                case "Remove Employee":
+                    removeEmployees();
+                    break;
+
+                case "Update Employee Role":
+                    updateRole();
+                    break;
+
+                case "Update Employee Manager":
+                    updateManager();
+                    break;
+
+                case "View ALL Employees":
+                    viewRoles();
+                    break;
             }
         });
 }
 
 // Function to view all employees
 function viewEmployees() {
-    query("SELECT * FROM employee", function (err, res) {
+    connection.query("SELECT * FROM _______", function (err, res) {  // add joined table
         if (err) throw err;
-        console.table(id, first_name, last_name, title, department, salary, manager);
+        console.table(res);
     });
 }
 
 // Function to view all employees by department
-// Function to view all employees by manager
+// function deptEmployees() {
+//     connection.query("SELECT * FROM _______", function (err, res) {  // add joined table
+//         if (err) throw err;
+//         console.table(res);
+//     });
+// }
+
+// Function to view all employees by manager - similar to above
+function mngrEmployees() {
+
+}
+
 // Function to add employee
 function addEmployee() {
-    
     inquirer
-      .prompt(newEmployee)
-      .then((answers) => {
-       connection.query("INSERT INTO employees SET ?",
-      }), function (err, res) {
-        if (err) throw err;
-        console.log(res.affectedRows + " employee added\n");
-    });
+        .prompt(newEmployee)
+        .then((answers) => {
+            connection.query("INSERT INTO ________ SET ?", {   // add joined table
+                first_name: answers.firstName,
+                last_name: answers.lastName,
+                role: answers.role,
+                manager: answers.manager,
+                department: answers.department,
+                salary: answers.salary,
+            }),
+                function (err) {
+                    if (err) throw err;
+                    console.log("Employee successfully added\n");
+                };
+        });
 }
 
 // Function to remove employee
 function removeEmployee(employee) {
-    query("DELETE FROM ______ WHERE ?", { employee }, function (err, res) {
+    connection.query("DELETE FROM ______ WHERE ?", { employee }, function (err, res) {
         if (err) throw err;
         console.log(res.affectedRows + " employee deleted\n");
     });
 }
 
 // Function to update employee role
+function updateRole() {
+
+}
+
 // Function to update employee manager
+function updateManager() {
+
+}
+
 // Function to view all roles
+function viewRoles() {
+
+}
 
 // Function to end database connection
 function endConnection() {
