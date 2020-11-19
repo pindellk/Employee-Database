@@ -22,8 +22,8 @@ connection.connect(function (err) {
 
 // Object for main action menu
 const actionMenu = {
-    name: "action",
-    type: "rawlist",
+    type: "list",
+    name: "select",
     message: "What would you like to do?",
     choices: [
         "View All Employees",
@@ -33,7 +33,8 @@ const actionMenu = {
         "Remove Employee",
         "Update Employee Role",
         "Update Employee Manager",
-        "View ALL Roles"
+        "View ALL Roles",
+        "Quit"
     ]
 };
 
@@ -144,17 +145,17 @@ function deptEmployees() {
 }
 
 // Function to view all employees by manager
-function mngrEmployees() {
-    var query = "employee.id, employee.first_name, employee.last_name, employee.manager_id ";
-    query += "FROM employee INNER JOIN role ";
-    query += "ON employee.role_id = role.id ";
-    query += "WHERE role.title = "manager" ";
+// function mngrEmployees() {
+//     var query = "employee.id, employee.first_name, employee.last_name, employee.manager_id ";
+//     query += "FROM employee INNER JOIN role ";
+//     query += "ON employee.role_id = role.id ";
+//     query += "WHERE role.title = "manager" ";
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
-        console.table(res);
-    });
-}
+//     connection.query(query, function (err, res) {
+//         if (err) throw err;
+//         console.table(res);
+//     });
+// }
 
 // Function to add employee
 function addEmployee() {
