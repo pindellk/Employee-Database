@@ -80,7 +80,7 @@ function start() {
     inquirer
         .prompt(actionMenu)
         .then((answer) => {
-            switch (answer.action) {
+            switch (answer.select) {
                 case "View All Employees":
                     viewEmployees();
                     break;
@@ -89,13 +89,13 @@ function start() {
                     deptEmployees();
                     break;
 
-                case "View All Employees by Manager":
-                    mngrEmployees();
-                    break;
-
-                // case "Add Employee":
-                //     addEmployee();
+                // case "View All Employees by Manager":
+                //     mngrEmployees();
                 //     break;
+
+                case "Add Employee":
+                    addEmployee();
+                    break;
 
                 // case "Remove Employee":
                 //     removeEmployees();
@@ -112,6 +112,10 @@ function start() {
                 // case "View ALL Employees":
                 //     viewRoles();
                 //     break;
+
+                case "Quit":
+                    endConnection();
+                    break;
             }
         });
 }
@@ -127,6 +131,7 @@ function viewEmployees() {
     connection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
+        start();
     });
 }
 
@@ -141,6 +146,7 @@ function deptEmployees() {
     connection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
+        start();
     });
 }
 
@@ -154,6 +160,7 @@ function deptEmployees() {
 //     connection.query(query, function (err, res) {
 //         if (err) throw err;
 //         console.table(res);
+//         start();
 //     });
 // }
 
@@ -162,18 +169,27 @@ function addEmployee() {
     inquirer
         .prompt(newEmployee)
         .then((answers) => {
-            connection.query("INSERT INTO ________ SET ?", {   // add joined table
-                first_name: answers.firstName,
-                last_name: answers.lastName,
-                role: answers.role,
-                manager: answers.manager,
-                department: answers.department,
-                salary: answers.salary,
-            }),
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    first_name: answers.firstName,
+                    last_name: answers.lastName
+                },
+                // "INSERT INTO role SET ? ",
+                // {
+                //     role: answers.role,
+                //     salary: answers.salary
+                // },
+                // "INSERT INTO role SET ? ",
+                // {
+                //     department: answers.department,
+                // },
                 function (err) {
                     if (err) throw err;
                     console.log("Employee successfully added\n");
-                };
+                    start();
+                }
+            );
         });
 }
 
@@ -182,6 +198,7 @@ function removeEmployee(employee) {
     connection.query("DELETE FROM ______ WHERE ?", { employee }, function (err, res) {
         if (err) throw err;
         console.log(res.affectedRows + " employee deleted\n");
+        start();
     });
 }
 
