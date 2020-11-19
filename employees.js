@@ -97,9 +97,9 @@ function start() {
                     addEmployee();
                     break;
 
-                // case "Remove Employee":
-                //     removeEmployees();
-                //     break;
+                case "Remove Employee":
+                    removeEmployee();
+                    break;
 
                 // case "Update Employee Role":
                 //     updateRole();
@@ -109,9 +109,9 @@ function start() {
                 //     updateManager();
                 //     break;
 
-                // case "View ALL Employees":
-                //     viewRoles();
-                //     break;
+                case "View ALL Roles":
+                    viewRoles();
+                    break;
 
                 case "Quit":
                     endConnection();
@@ -194,12 +194,28 @@ function addEmployee() {
 }
 
 // Function to remove employee
-function removeEmployee(employee) {
-    connection.query("DELETE FROM ______ WHERE ?", { employee }, function (err, res) {
+function removeEmployee() {
+    connection.query("SELECT * FROM employee", function (err, res) {
         if (err) throw err;
-        console.log(res.affectedRows + " employee deleted\n");
-        start();
-    });
+        console.table(res);
+        inquirer
+            .prompt([
+                {
+                    name: "employeeId",
+                    type: "input",
+                    message: "Enter the id of the employee you would like to remove"
+                }
+            ])
+            .then((answer) => {
+                connection.query("DELETE FROM employee WHERE id = ?",
+                    [answer.employeeId], function (err, res) {
+                        if (err) throw err;
+                        console.log(res.affectedRows + " employee deleted\n");
+                    }
+                )
+                start();
+            })
+    })
 }
 
 // Function to update employee role
@@ -207,14 +223,20 @@ function updateRole() {
 
 }
 
-// Function to update employee manager
-function updateManager() {
+// // Function to update employee manager
+// function updateManager() {
 
-}
+// }
 
 // Function to view all roles
 function viewRoles() {
+    var query = "SELECT title FROM role"
 
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
 }
 
 // Function to end database connection
