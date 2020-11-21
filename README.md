@@ -2,7 +2,7 @@
 
 ## Description
 
-View and modify employee database data.
+View and modify employee database data via the command line.
 
 ## Table of Contents 
 
@@ -33,7 +33,8 @@ To use, run the following command:
 ```
 node employees.js
 ```
-Answer the prompts. The rendered html will appear in a file called team.html in the output folder.
+
+Utilize the provided menu to select actions and answer prompts as necessary.
 
 ## License
 
